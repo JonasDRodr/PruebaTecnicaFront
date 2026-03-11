@@ -1,0 +1,132 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+
+      <div class="mb-4">
+        <h2 class="fw-bold mb-1 display-3" style="color: #ffffff;">NPS</h2>
+      </div>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button
+                class="btn btn-primary px-4"
+                (click)="cargarReporte()">
+                Cargar Reporte
+            </button>
+        </div>
+    @if (loading()) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-2 text-muted">Cargando reporte...</p>
+        </div>
+    }
+
+    @if (errorMsg()) {
+        <div class="alert alert-danger">
+          {{ errorMsg() }}
+        </div>
+    }
+
+    @if (!loading() && reporte()) {
+        <div>
+          <div class="card shadow-sm mb-4">
+            <div class="card-body p-4 text-center">
+              <p class="text-muted mb-1 fw-semibold text-uppercase" style="letter-spacing: 0.1em; font-size: 0.8rem;">
+                Net Promoter Score
+              </p>
+              <h1 class="display-1 fw-bold mb-0" [ngClass]="getNpsClass()">
+                {{ reporte()!.nps }}
+              </h1>
+              <p class="text-muted mt-1">de un máximo de 100</p>
+              <hr>
+              <p class="text-muted mb-0 small">
+                Total encuestados: <strong>{{ reporte()!.totalEncuestados }}</strong>
+              </p>
+            </div>
+          </div>
+  
+          <!-- Tarjetas promotores / neutros / detractores -->
+          <div class="row g-3 mb-4">
+  
+            <div class="col-md-4">
+              <div class="card shadow-sm border-success h-100">
+                <div class="card-body text-center p-4">
+                  <div class="mb-2">
+                    <span class="badge bg-success px-3 py-2">Promotores</span>
+                  </div>
+                  <h2 class="fw-bold text-success display-4">{{ reporte()!.promotores }}</h2>
+                  <p class="text-muted small mb-1">Puntuación 9 - 10</p>
+                  <p class="text-muted small">
+                    {{ reporte()!.totalEncuestados > 0
+                      ? ((reporte()!.promotores / reporte()!.totalEncuestados) * 100 | number:'1.0-1')
+                      : 0 }}%
+                  </p>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="card shadow-sm border-warning h-100">
+                <div class="card-body text-center p-4">
+                  <div class="mb-2">
+                    <span class="badge bg-warning text-dark px-3 py-2">Neutros</span>
+                  </div>
+                  <h2 class="fw-bold text-warning display-4">{{ reporte()!.neutros }}</h2>
+                  <p class="text-muted small mb-1">Puntuación 7 - 8</p>
+                  <p class="text-muted small">
+                    {{ reporte()!.totalEncuestados > 0
+                      ? ((reporte()!.neutros / reporte()!.totalEncuestados) * 100 | number:'1.0-1')
+                      : 0 }}%
+                  </p>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="card shadow-sm border-danger h-100">
+                <div class="card-body text-center p-4">
+                  <div class="mb-2">
+                    <span class="badge bg-danger px-3 py-2">Detractores</span>
+                  </div>
+                  <h2 class="fw-bold text-danger display-4">{{ reporte()!.detractores }}</h2>
+                  <p class="text-muted small mb-1">Puntuación 0 - 6</p>
+                  <p class="text-muted small">
+                    {{ reporte()!.totalEncuestados > 0
+                      ? ((reporte()!.detractores / reporte()!.totalEncuestados) * 100 | number:'1.0-1')
+                      : 0 }}%
+                  </p>
+                </div>
+              </div>
+            </div>
+  
+          </div>
+  
+          <!-- Distribución de respuestas -->
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-4">Distribución de respuestas</h5>
+  
+              @for (item of getDistribucionEntries(); track item.key) {
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <span class="fw-semibold" style="min-width: 1.5rem;">{{ item.key }}</span>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 24px;">
+                      <div
+                        class="progress-bar"
+                        [ngClass]="getBarClass(item.key)"
+                        [style.width.%]="getBarWidth(item.value)"
+                        role="progressbar">
+                      </div>
+                    </div>
+                  </div>
+                  <span class="text-muted small" style="min-width: 4rem;">
+                    {{ item.value }} {{ item.value === 1 ? 'voto' : 'votos' }}
+                  </span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+    }
+    </div>
+  </div>
+</div>

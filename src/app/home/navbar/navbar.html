@@ -1,0 +1,10 @@
+<nav class="navbar" style="background-color: #4a0404;">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1" style="color: #ffffff; cursor: pointer;" routerLink="/">Inicio</span>
+    <div class="d-flex gap-2">
+      @if (router.url === '/') {
+        <button id="iniciaSesion" type="button" class="btn btn-primary btn-sm" routerLink="/login">Iniciar sesión</button>
+      }
+    </div>
+  </div>
+</nav>
